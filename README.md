@@ -1,159 +1,109 @@
-# ArduPilot Project
+## For Ardupilot Customizable controller
 
-<a href="https://ardupilot.org/discord"><img src="https://img.shields.io/discord/674039678562861068.svg" alt="Discord">
+### Usefull links
 
-[![Test Copter](https://github.com/ArduPilot/ardupilot/workflows/test%20copter/badge.svg?branch=master)](https://github.com/ArduPilot/ardupilot/ardupilot/actions/workflows/test_sitl_copter.yml) [![Test Plane](https://github.com/ArduPilot/ardupilot/workflows/test%20plane/badge.svg?branch=master)](https://github.com/ArduPilot/ardupilot/ardupilot/actions/workflows/test_sitl_plane.yml) [![Test Rover](https://github.com/ArduPilot/ardupilot/workflows/test%20rover/badge.svg?branch=master)](https://github.com/ArduPilot/ardupilot/ardupilot/actions/workflows/test_sitl_rover.yml) [![Test Sub](https://github.com/ArduPilot/ardupilot/workflows/test%20sub/badge.svg?branch=master)](https://github.com/ArduPilot/ardupilot/ardupilot/actions/workflows/test_sitl_sub.yml) [![Test Tracker](https://github.com/ArduPilot/ardupilot/workflows/test%20tracker/badge.svg?branch=master)](https://github.com/ArduPilot/ardupilot/ardupilot/actions/workflows/test_sitl_tracker.yml)
+1) Main webpage for developer- https://ardupilot.org/dev/docs/building-setup-linux.html
+2) To clean ardupilot github repository on Ubuntu ```./waf distclean```
+3) Learning base code - https://ardupilot.org/dev/docs/learning-the-ardupilot-codebase.html
+4) Ardupilot Libraries for sensors, controller - https://ardupilot.org/dev/docs/apmcopter-programming-libraries.html
+5) Link to build the code - https://github.com/ArduPilot/ardupilot/blob/master/BUILD.md
 
-[![Test AP_Periph](https://github.com/ArduPilot/ardupilot/workflows/test%20ap_periph/badge.svg?branch=master)](https://github.com/ArduPilot/ardupilot/ardupilot/actions/workflows/test_sitl_periph.yml) [![Test Chibios](https://github.com/ArduPilot/ardupilot/workflows/test%20chibios/badge.svg?branch=master)](https://github.com/ArduPilot/ardupilot/ardupilot/actions/workflows/test_chibios.yml) [![Test Linux SBC](https://github.com/ArduPilot/ardupilot/workflows/test%20Linux%20SBC/badge.svg?branch=master)](https://github.com/ArduPilot/ardupilot/ardupilot/actions/workflows/test_linux_sbc.yml) [![Test Replay](https://github.com/ArduPilot/ardupilot/workflows/test%20replay/badge.svg?branch=master)](https://github.com/ArduPilot/ardupilot/ardupilot/actions/workflows/test_replay.yml)
+### Getting started with Ardupilot code
 
-[![Test Unit Tests](https://github.com/ArduPilot/ardupilot/workflows/test%20unit%20tests/badge.svg?branch=master)](https://github.com/ArduPilot/ardupilot/ardupilot/actions/workflows/test_unit_tests.yml) [![test size](https://github.com/ArduPilot/ardupilot/actions/workflows/test_size.yml/badge.svg)](https://github.com/ArduPilot/ardupilot/actions/workflows/test_size.yml)
+1) To download Ardupilot repo\
+    $ git clone --recursive https://github.com/ArduPilot/ardupilot.git
+2) Go to ardupilot directory and type following code to build the fmv3 version. After successfully building it you will see fmv3 named folder in build directory. After that run following code to burn on Pixhawk\
+    ```./waf configure --board fmuv3```\
+    ```./waf copter```\
+2.1) Go to ardupilot directory and type following code to build the fmv2 version. After successfully building it you will see pixhawk1 named folder in build directory. After that run following code to burn on Pixhawk\
+    ```./waf configure --board pxhawk1```\
+    ```./waf copter```
+3) To upload the code on the Pixhawk use following code in ardupilot main directory\
+    ```./waf --targets bin/arducopter --upload```
+    or \
+    ```./waf copter --upload```
 
-[![Test Environment Setup](https://github.com/ArduPilot/ardupilot/actions/workflows/test_environment.yml/badge.svg?branch=master)](https://github.com/ArduPilot/ardupilot/actions/workflows/test_environment.yml)
+4) If you got the error  ```Waf: Entering directory `/home/user/ardupilot/build/navio2'
+Command ['/usr/bin/git', 'rev-parse', '--short=8', 'HEAD'] returned 128 ``` when you are working on git based ardupilot directory.
 
-[![Cygwin Build](https://github.com/ArduPilot/ardupilot/actions/workflows/cygwin_build.yml/badge.svg)](https://github.com/ArduPilot/ardupilot/actions/workflows/cygwin_build.yml) [![Macos Build](https://github.com/ArduPilot/ardupilot/actions/workflows/macos_build.yml/badge.svg)](https://github.com/ArduPilot/ardupilot/actions/workflows/macos_build.yml)
+Go to Tools/ardupilotwaf/git_submodule.py and modified following method
 
-[![Coverity Scan Build Status](https://scan.coverity.com/projects/5331/badge.svg)](https://scan.coverity.com/projects/ardupilot-ardupilot)
+```
+def _git_head_hash(ctx, path, short=False):
+    cmd = [ctx.env.get_flat('GIT'), 'rev-parse']
+    if short:
+        cmd.append('--short=8')
+    cmd.append('HEAD')
+    out = ctx.cmd_and_log(cmd, quiet=Context.BOTH, cwd=path)
+    return out.strip()
+```
+    
+to 
 
-[![Test Coverage](https://github.com/ArduPilot/ardupilot/actions/workflows/test_coverage.yml/badge.svg?branch=master)](https://github.com/ArduPilot/ardupilot/actions/workflows/test_coverage.yml)
+```
+def _git_head_hash(ctx, path, short=False):
+    return "deadc0de"
+```
+    
+    
 
-[![Autotest Status](https://autotest.ardupilot.org/autotest-badge.svg)](https://autotest.ardupilot.org/)
+### UART Ports on Ardupilot https://ardupilot.org/dev/docs/learning-ardupilot-uarts-and-the-console.html
 
-ArduPilot is the most advanced, full-featured and reliable open source autopilot software available.
-It has been under development since 2010 by a diverse team of professional engineers, computer scientists and community contributors.
-Our autopilot software is capable of controlling almost any vehicle system imaginable, from conventional airplanes, quad planes, multi-rotors, and helicopters to rovers, boats, balance bots and even submarines.
-It is continually being expanded to provide support for new emerging vehicle types.
+1) Followings are the UART ports on the Pixhawk
+* uartA - the console (usually USB, runs MAVLink telemetry) (Serial 0)
+* uartB - the first GPS  (Serial 3) [+5v], [TX], [RX], [CAN2 TX], [CAN2RX], [GND]
+* uartC - primary telemetry (telem1 on most autopilots)  (Serial 1) [+5v], [TX], [RX], [CTS], [RTS], [GND]
+* uartD - secondary telemetry (telem2 on most autopilots)  (Serial 2) [+5v], [TX], [RX], [CTS], [RTS], [GND]
+* uartE - 2nd GPS (Serial 4/5)  (Serial 4 and 5) [5v], [TX4], [RX4], [TX5], [RX5], [GND]
+* uartF - User Configurable  (Serial 0)
+* uartG - User Configurable  (Serial 0)
+* uartH - User Configurable  (Serial 0)
 
-## The ArduPilot project is made up of: ##
+2) Some basic codes
+* printf - formatted print
+* printf_P - formatted print with progmem string (saves memory on AVR boards)
+* println - print and line feed
+* write - write a bunch of bytes
+* read - read some bytes
+* available - check if any bytes are waiting
+* txspace - check how much outgoing buffer space is available
+* get_flow_control - check if the UART has flow control capabilities
 
-- ArduCopter: [code](https://github.com/ArduPilot/ardupilot/tree/master/ArduCopter), [wiki](https://ardupilot.org/copter/index.html)
+### For mission planner message - ```https://ardupilot.org/dev/docs/debug-with-send-text.html```
 
-- ArduPlane: [code](https://github.com/ArduPilot/ardupilot/tree/master/ArduPlane), [wiki](https://ardupilot.org/plane/index.html)
+### Useful notes
 
-- Rover: [code](https://github.com/ArduPilot/ardupilot/tree/master/Rover), [wiki](https://ardupilot.org/rover/index.html)
 
-- ArduSub : [code](https://github.com/ArduPilot/ardupilot/tree/master/ArduSub), [wiki](http://ardusub.com/)
+1) The "_with_bl.hex": (it will be at build->name_of_board-> bin) file contains the bootloader and is used for flashing to Ardupilot from other firmware... 
+2) The "..apj": (it will be at build->name_of_board-> bin) is used by mission planner to update firmware on existing Ardupilot installations as a local firmware file
 
-- Antenna Tracker : [code](https://github.com/ArduPilot/ardupilot/tree/master/AntennaTracker), [wiki](https://ardupilot.org/antennatracker/index.html)
+### If functions in UserCode.cpp files are disabled/showing less brightened
 
-## User Support & Discussion Forums ##
+1) Go to APM_Config.h file and uncomment the respective functions.
 
-- Support Forum: <https://discuss.ardupilot.org/>
 
-- Community Site: <https://ardupilot.org>
+## For CAM device
 
-## Developer Information ##
+1) Serial port configuration - https://docs.px4.io/master/en/peripherals/serial_configuration.html
+2) Change the parameters [MAV_2_CONFIG] to TELEM 2, [MAV_2_RATE] to 38400 (considering 4 bits of data), 
+3) Bit rate (B/s) = baud rate * the number of bit per baud - i.e., if buad rate = 9600,\\
 
-- Github repository: <https://github.com/ArduPilot/ardupilot>
+    a) Bit rate – the number of binary ‘bits’, 1s or 0s to be transmitted per second\
+    b) Baud rate – the number of line ‘symbols’ transmitted per second
 
-- Main developer wiki: <https://ardupilot.org/dev/>
+4) Serial port mapping - (the location on the firmware is - PX4-Autopilot/boards/px4/fmu-v3/default.cmake)\
+    SERIAL_PORTS\
+	* GPS1:/dev/ttyS0\
+	* TEL1:/dev/ttyS1\
+	* TEL2:/dev/ttyS2\
+	* TEL4:/dev/ttyS6\
 
-- Developer discussion: <https://discuss.ardupilot.org>
+5) Sample code - https://programmer.help/blogs/5e35463a2dbdb.html
 
-- Developer chat: <https://discord.com/channels/ardupilot>
 
-## Top Contributors ##
 
-- [Flight code contributors](https://github.com/ArduPilot/ardupilot/graphs/contributors)
-- [Wiki contributors](https://github.com/ArduPilot/ardupilot_wiki/graphs/contributors)
-- [Most active support forum users](https://discuss.ardupilot.org/u?order=post_count&period=quarterly)
-- [Partners who contribute financially](https://ardupilot.org/about/Partners)
 
-## How To Get Involved ##
 
-- The ArduPilot project is open source and we encourage participation and code contributions: [guidelines for contributors to the ardupilot codebase](https://ardupilot.org/dev/docs/contributing.html)
 
-- We have an active group of Beta Testers to help us improve our code: [release procedures](https://ardupilot.org/dev/docs/release-procedures.html)
 
-- Desired Enhancements and Bugs can be posted to the [issues list](https://github.com/ArduPilot/ardupilot/issues).
 
-- Help other users with log analysis in the [support forums](https://discuss.ardupilot.org/)
-
-- Improve the wiki and chat with other [wiki editors on Discord #documentation](https://discord.com/channels/ardupilot)
-
-- Contact the developers on one of the [communication channels](https://ardupilot.org/copter/docs/common-contact-us.html)
-
-## License ##
-
-The ArduPilot project is licensed under the GNU General Public
-License, version 3.
-
-- [Overview of license](https://dev.ardupilot.com/wiki/license-gplv3)
-
-- [Full Text](https://github.com/ArduPilot/ardupilot/blob/master/COPYING.txt)
-
-## Maintainers ##
-
-ArduPilot is comprised of several parts, vehicles and boards. The list below
-contains the people that regularly contribute to the project and are responsible
-for reviewing patches on their specific area.
-
-- [Andrew Tridgell](https://github.com/tridge):
-  - ***Vehicle***: Plane, AntennaTracker
-  - ***Board***: Pixhawk, Pixhawk2, PixRacer
-- [Francisco Ferreira](https://github.com/oxinarf):
-  - ***Bug Master***
-- [Grant Morphett](https://github.com/gmorph):
-  - ***Vehicle***: Rover
-- [Jacob Walser](https://github.com/jaxxzer):
-  - ***Vehicle***: Sub
-- [Lucas De Marchi](https://github.com/lucasdemarchi):
-  - ***Subsystem***: Linux
-- [Michael du Breuil](https://github.com/WickedShell):
-  - ***Subsystem***: Batteries
-  - ***Subsystem***: GPS
-  - ***Subsystem***: Scripting
-- [Peter Barker](https://github.com/peterbarker):
-  - ***Subsystem***: DataFlash, Tools
-- [Randy Mackay](https://github.com/rmackay9):
-  - ***Vehicle***: Copter, Rover, AntennaTracker
-- [Siddharth Purohit](https://github.com/bugobliterator):
-  - ***Subsystem***: CAN, Compass
-  - ***Board***: Cube*
-- [Tom Pittenger](https://github.com/magicrub):
-  - ***Vehicle***: Plane
-- [Bill Geyer](https://github.com/bnsgeyer):
-  - ***Vehicle***: TradHeli
-- [Chris Olson](https://github.com/ChristopherOlson):
-  - ***Vehicle***: TradHeli
-- [Emile Castelnuovo](https://github.com/emilecastelnuovo):
-  - ***Board***: VRBrain
-- [Georgii Staroselskii](https://github.com/staroselskii):
-  - ***Board***: NavIO
-- [Gustavo José de Sousa](https://github.com/guludo):
-  - ***Subsystem***: Build system
-- [Julien Beraud](https://github.com/jberaud):
-  - ***Board***: Bebop & Bebop 2
-- [Leonard Hall](https://github.com/lthall):
-  - ***Subsystem***: Copter attitude control and navigation
-- [Matt Lawrence](https://github.com/Pedals2Paddles):
-  - ***Vehicle***: 3DR Solo & Solo based vehicles
-- [Matthias Badaire](https://github.com/badzz):
-  - ***Subsystem***: FRSky
-- [Mirko Denecke](https://github.com/mirkix):
-  - ***Board***: BBBmini, BeagleBone Blue, PocketPilot
-- [Paul Riseborough](https://github.com/priseborough):
-  - ***Subsystem***: AP_NavEKF2
-  - ***Subsystem***: AP_NavEKF3
-- [Víctor Mayoral Vilches](https://github.com/vmayoral):
-  - ***Board***: PXF, Erle-Brain 2, PXFmini
-- [Amilcar Lucas](https://github.com/amilcarlucas):
-  - ***Subsystem***: Marvelmind
-- [Samuel Tabor](https://github.com/samuelctabor):
-  - ***Subsystem***: Soaring/Gliding
-- [Henry Wurzburg](https://github.com/Hwurzburg):
-  - ***Subsystem***: OSD
-  - ***Site***: Wiki
-- [Peter Hall](https://github.com/IamPete1):
-  - ***Vehicle***: Tailsitters
-  - ***Vehicle***: Sailboat
-  - ***Subsystem***: Scripting
-- [Andy Piper](https://github.com/andyp1per):
-  - ***Subsystem***: Crossfire
-  - ***Subsystem***: ESC
-  - ***Subsystem***: OSD
-  - ***Subsystem***: SmartAudio
-- [Alessandro Apostoli ](https://github.com/yaapu):
-  - ***Subsystem***: Telemetry
-  - ***Subsystem***: OSD
-- [Rishabh Singh ](https://github.com/rishabsingh3003):
-  - ***Subsystem***: Avoidance/Proximity
