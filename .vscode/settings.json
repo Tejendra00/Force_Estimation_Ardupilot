@@ -1,0 +1,12 @@
+{
+    "C_Cpp.errorSquiggles": "Enabled",
+    "files.associations": {
+        "concepts": "cpp",
+        "type_traits": "cpp",
+        "functional": "cpp",
+        "iterator": "cpp",
+        "thread": "cpp",
+        "tuple": "cpp",
+        "algorithm": "cpp"
+    }
+}

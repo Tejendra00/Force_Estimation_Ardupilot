@@ -1433,6 +1433,9 @@ public:
     float min_acc_second_coefficient(float t1, float t2, float st, float en);
     float min_acc_third_coefficient(float t1, float t2, float st, float en);
     float min_acc_fourth_coefficient(float t1, float t2, float st, float en);
+    ///////////////////////External Force////////////////////////////////////////////////
+    float external_force_eqns(float quad_acc, float Force_Thrust, float Fe, float KIF);
+    float RKF45(float Fe , float Force_Thrust, float quad_acc, float KIF);
 
 protected:
 
