@@ -285,10 +285,9 @@ public:
     // inherit constructor
     using Mode::Mode;
     Number mode_number() const override { return Number::MYCONTROLLER; }
-    
     bool init(bool) override;
 
-    void run() override;
+    virtual void run() override;
 
     bool requires_GPS() const override { return false; }
     bool has_manual_throttle() const override { return true; }
@@ -302,7 +301,16 @@ public:
     void imu_read();
     void battery_check();
     void motor_pwm(uint8_t);
-    // void Log_Write_position();
+    void custom_PD_controller(float des_phi, float des_theta, float des_psi,float des_phi_dot, float des_theta_dot, float des_psi_dot, float des_z, float des_z_dot);
+    void custom_PID_controller(float des_phi, float des_theta, float des_psi,float des_phi_dot, float des_theta_dot, float des_psi_dot, float des_z, float des_z_dot);
+    int Inverse_thrust_function(float Force);
+    void custom_pwm_code();
+    float saturation_for_yaw_angle_error(float error);
+    float saturation_for_roll_pitch_angle_error(float error);
+    float saturation_for_altitude_error(float z);
+    float sat_I_gain_ph_th(float sum);
+    float sat_I_gain_psi(float sum);
+    void thrust_measurement_code();
 
 protected:
 
@@ -312,7 +320,6 @@ protected:
 private:
 
 };
-
 #if MODE_ACRO_ENABLED == ENABLED
 class ModeAcro : public Mode {
 
@@ -1401,7 +1408,6 @@ public:
     // inherit constructor
     using Mode::Mode;
     Number mode_number() const override { return Number::STABILIZE; }
-    // bool init(bool) override;
 
     virtual void run() override;
 
@@ -1412,30 +1418,6 @@ public:
     bool allows_save_trim() const override { return true; }
     bool allows_autotune() const override { return true; }
     bool allows_flip() const override { return true; }
-    void custom_pwm_code();
-    void system_identification_main();
-    void system_identification_x_axis();
-    void system_identification_y_axis();
-    void quad_states();
-    void custom_PID_controller(float des_phi, float des_theta, float des_psi,float des_phi_dot, float des_theta_dot, float des_psi_dot, float des_z, float des_z_dot);
-    void custom_position_controller(float x_des, float y_des, float z_des, float x_des_dot, float y_des_dot, float z_des_dot, float des_psi, float des_psi_dot);
-    void custom_PID_controller_sysID(float des_phi, float des_theta, float des_psi,float des_phi_dot, float des_theta_dot, float des_psi_dot, float des_z, float des_z_dot);
-    void IITGN_text_traj_planning();
-    void pilot_input();
-    float saturation_for_roll_pitch_angle_error(float error);
-    float sat_I_gain_ph_th(float sum);
-    float sat_I_gain_psi(float sum);
-    int Inverse_thrust_function(float Force);
-    float saturation_for_yaw_angle_error(float error);
-    void attitude_altitude_controller();
-    float  norm_2(Vector3f A, Vector3f B);
-    float min_acc_first_coefficient(float t1, float t2, float st, float en);
-    float min_acc_second_coefficient(float t1, float t2, float st, float en);
-    float min_acc_third_coefficient(float t1, float t2, float st, float en);
-    float min_acc_fourth_coefficient(float t1, float t2, float st, float en);
-    ///////////////////////External Force////////////////////////////////////////////////
-    float external_force_eqns(float quad_acc, float Force_Thrust, float Fe, float KIF);
-    float RKF45(float Fe , float Force_Thrust, float quad_acc, float KIF);
 
 protected:
 

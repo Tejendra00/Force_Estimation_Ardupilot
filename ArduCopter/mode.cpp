@@ -36,6 +36,10 @@ Mode *Copter::mode_from_mode_num(const Mode::Number mode)
             ret = &mode_acro;
             break;
 #endif
+        case Mode::Number::MYCONTROLLER:  // my new controller pid
+            ret = &mode_mycontroller;
+            break;
+            
         case Mode::Number::STABILIZE:
             ret = &mode_stabilize;
             break;
@@ -75,12 +79,6 @@ Mode *Copter::mode_from_mode_num(const Mode::Number mode)
 #if MODE_RTL_ENABLED == ENABLED
         case Mode::Number::RTL:
             ret = &mode_rtl;
-            break;
-#endif
-
-#if MODE_MYMODECONTROLLER_ENABLED == ENABLED
-        case Mode::Number::MYCONTROLLER:
-            ret = &mode_mycontroller;
             break;
 #endif
 
